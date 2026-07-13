@@ -160,7 +160,10 @@
   .bio p{color:var(--muted-on-forest);margin:0 0 1.1em}
   .bio p.quote{font-weight:500;font-size:20px;color:var(--cream);line-height:1.7}
   .creds{margin:34px 0 0;padding:0;list-style:none;border-top:1px solid rgba(143,189,178,.4)}
-  .creds li{display:grid;grid-template-columns:210px 1fr;gap:18px;padding:14px 0;border-bottom:1px solid rgba(143,189,178,.25);font-size:15px;font-family:var(--sans)}
+  .creds li{display:grid;grid-template-columns:64px 200px 1fr;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(143,189,178,.25);font-size:15px;font-family:var(--sans)}
+  .cred-logo{display:flex;align-items:center;width:56px}
+  .cred-logo img{max-height:34px;max-width:54px;object-fit:contain;filter:brightness(0) invert(1);opacity:.92}
+  .cred-logo-text{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.06em;color:var(--cream);opacity:.85;border:1px solid rgba(243,236,218,.35);padding:5px 6px;line-height:1.3;text-align:center}
   .creds li b{font-weight:600;color:var(--cream)}
   .creds li span{color:var(--muted-on-forest)}
 
@@ -184,6 +187,7 @@
   @media (max-width:860px){
     .nav-links{display:none}
     .cred-inner{padding:22px 24px}
+    .creds li{grid-template-columns:1fr;gap:6px}
     .case,.profile-split,.contact-grid{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .logo-wall{grid-template-columns:repeat(2,1fr)}
@@ -394,11 +398,11 @@
           한국의 매장과 유통 현장에서 지속 가능한 운영을 배웠습니다.
           Fine dining부터 리테일까지 — 폭넓은 업태 경험이 예민한 감지의 근거입니다.</p>
           <ul class="creds">
-            <li><b>The Culinary Institute of America</b><span>AOS in Culinary Arts · Bachelor in Applied Food Studies</span></li>
-            <li><b>Bouley Restaurant</b><span>Chef — New York · Michelin 1★</span></li>
-            <li><b>Gary Danko</b><span>Lead Pastry Chef — San Francisco · Michelin 1★</span></li>
-            <li><b>META</b><span>Senior Pastry Chef — San Francisco</span></li>
-            <li><b>Calipub</b><span>General Manager — 연매출 150% 성장</span></li>
+            <li><i class="cred-logo"><img src="assets/cred-cia.svg" alt="CIA 로고"></i><b>The Culinary Institute of America</b><span>AOS in Culinary Arts · Bachelor in Applied Food Studies</span></li>
+            <li><i class="cred-logo"><img src="assets/cred-bouley.png" alt="Bouley 로고"></i><b>Bouley Restaurant</b><span>Chef — New York · Michelin 1★</span></li>
+            <li><i class="cred-logo"><span class="cred-logo-text">GARY<br>DANKO</span></i><b>Gary Danko</b><span>Lead Pastry Chef — San Francisco · Michelin 1★</span></li>
+            <li><i class="cred-logo"><img src="assets/cred-meta.svg" alt="Meta 로고"></i><b>META</b><span>Senior Pastry Chef — San Francisco</span></li>
+            <li><i class="cred-logo"><span class="cred-logo-text">CALIPUB</span></i><b>Calipub</b><span>General Manager — 연매출 150% 성장</span></li>
           </ul>
         </div>
       </div>
