@@ -181,6 +181,23 @@
     .profile-bio{padding:56px 28px}
     section{padding:72px 0}
     .consultant-full{padding:0}
+    /* 모바일 헤더: 로고·CTA 겹침 방지 */
+    .nav{gap:12px}
+    .logo{gap:9px}
+    .logo span{font-size:13px;letter-spacing:.1em}
+    .nav-cta{padding:8px 14px;font-size:12px;white-space:nowrap}
+    /* 히어로 호흡 */
+    .hero{padding:64px 0 56px}
+    .medallion{width:168px;height:168px;margin-bottom:32px}
+    .hero p.lede{margin-bottom:34px}
+    /* 이력 표: 라벨-내용 세로 스택 */
+    .creds li{grid-template-columns:1fr;gap:3px;padding:13px 0}
+    /* 케이스 카드 여백 축소 (case-photo 네거티브 마진과 동기화) */
+    .case-card{padding:34px 24px}
+    .case-photo{width:calc(100% + 48px);margin:-34px -24px 26px;height:180px}
+    .stats{gap:22px}
+    .sec-head{margin-bottom:40px}
+    .contact-grid{gap:40px}
   }
 </style>
 
@@ -199,8 +216,8 @@
   <!-- 1. HERO -->
   <div class="hero">
     <div class="hero-bg" aria-hidden="true">
-      <video id="v1" class="live" src="assets/hero-kitchen.mp4" muted autoplay loop playsinline></video>
-      <video id="v2" src="assets/hero-hall.mp4" muted autoplay loop playsinline></video>
+      <video id="v1" class="live" data-src="assets/hero-kitchen.mp4" muted autoplay loop playsinline preload="none"></video>
+      <video id="v2" data-src="assets/hero-hall.mp4" muted autoplay loop playsinline preload="none"></video>
     </div>
     <div class="wrap">
       <div class="medallion">
@@ -413,19 +430,28 @@
   }), { threshold: .1 });
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-  // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드
+  // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드 — 모바일(768px 미만)은 데이터 절약을 위해 미로드
   const v1 = document.getElementById('v1'), v2 = document.getElementById('v2');
-  if (v1 && v2 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const tryPlay = () => [v1, v2].forEach(v => v.paused && v.play().catch(() => {}));
-    tryPlay();
-    [v1, v2].forEach(v => v.addEventListener('canplay', tryPlay));
+  if (v1 && v2) {
+    const mqDesktop = matchMedia('(min-width: 768px)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const tryPlay = () => [v1, v2].forEach(v => v.src && v.paused && v.play().catch(() => {}));
+    let started = false;
+    const loadVideos = () => {
+      if (started || reduced.matches) return;
+      started = true;
+      [v1, v2].forEach(v => { v.src = v.dataset.src; v.addEventListener('canplay', tryPlay); });
+      tryPlay();
+      let flip = false;
+      setInterval(() => {
+        flip = !flip;
+        v1.classList.toggle('live', !flip);
+        v2.classList.toggle('live', flip);
+      }, 7000);
+    };
+    if (mqDesktop.matches) loadVideos();
+    mqDesktop.addEventListener('change', e => { if (e.matches) loadVideos(); });
     ['click', 'scroll', 'touchstart', 'keydown'].forEach(ev =>
       addEventListener(ev, tryPlay, { once: true, passive: true }));
-    let flip = false;
-    setInterval(() => {
-      flip = !flip;
-      v1.classList.toggle('live', !flip);
-      v2.classList.toggle('live', flip);
-    }, 7000);
   }
 </script>
