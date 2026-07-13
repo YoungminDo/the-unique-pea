@@ -42,6 +42,9 @@
   .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
   .logo svg{display:block}
   .logo span{font-size:17px;letter-spacing:.14em;text-transform:uppercase}
+  .nav-links{display:flex;gap:30px;font-family:var(--sans);font-size:14px}
+  .nav-links a{text-decoration:none;color:var(--muted-on-forest);transition:color .2s}
+  .nav-links a:hover{color:var(--cream)}
   .nav-cta{font-family:var(--sans);font-size:13px;letter-spacing:.06em;text-decoration:none;border:1px solid var(--gold);color:var(--gold-soft);padding:10px 22px;transition:all .25s}
   .nav-cta:hover{background:var(--gold);color:var(--forest-deep)}
 
@@ -77,6 +80,12 @@
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.crest,h1,.hero .caps,.hero p.lede,.btn{animation:none}}
 
+  /* 성과 지표 스트립 */
+  .cred{border-top:1px solid rgba(143,189,178,.22);border-bottom:1px solid rgba(143,189,178,.22);background:rgba(18,51,48,.45)}
+  .cred-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:24px 28px}
+  .cred-row b{display:block;font-family:var(--sans);font-weight:700;font-size:16px;color:var(--cream)}
+  .cred-row span{font-family:var(--sans);font-size:13px;color:var(--muted-on-forest)}
+
   /* ── ornament divider ── */
   .orn{display:flex;align-items:center;gap:16px;justify-content:center;margin:0 auto;max-width:420px;color:var(--gold)}
   .orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold));opacity:.55}
@@ -105,20 +114,20 @@
 
   /* case (cream) */
   .case{display:grid;grid-template-columns:1fr 1fr;gap:36px}
-  .case-card{border:1px solid var(--gold-soft);outline:1px solid var(--gold-soft);outline-offset:5px;background:var(--cream-card);padding:44px 38px;margin:6px}
-  .case-card h3{font-size:26px;font-weight:500;margin:0 0 4px;text-align:center}
-  .case-card .where{font-family:var(--sans);font-size:12.5px;letter-spacing:.08em;color:var(--muted-on-cream);text-align:center;margin:0 0 30px}
-  .case-card h4{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);margin:28px 0 12px;text-align:center}
-  .case-card ul{margin:0;padding:0;list-style:none;text-align:center}
+  .case-card{border:1px solid rgba(30,92,85,.28);background:var(--cream-card);padding:40px 36px}
+  .case-card h3{font-size:24px;font-weight:600;margin:0 0 4px}
+  .case-card .where{font-family:var(--sans);font-size:13px;letter-spacing:.04em;color:var(--muted-on-cream);margin:0 0 26px}
+  .case-card h4{font-family:var(--sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:26px 0 10px}
+  .case-card ul{margin:0;padding:0;list-style:none}
   .case-card li{padding:6px 0;font-size:15px;color:var(--muted-on-cream);font-family:var(--sans)}
-  .stats{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;padding:22px 0;border-top:1px solid var(--cream-soft);border-bottom:1px solid var(--cream-soft)}
-  .stat{text-align:center}
+  .stats{display:flex;gap:32px;flex-wrap:wrap;padding:20px 0;border-top:1px solid var(--cream-soft);border-bottom:1px solid var(--cream-soft)}
+  .stat{text-align:left}
   .stat b{display:block;font-size:32px;font-weight:500;color:var(--gold-deep);font-variant-numeric:tabular-nums}
   .stat span{font-family:var(--sans);font-size:12.5px;color:var(--muted-on-cream)}
 
   /* how (forest) */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-bottom:64px}
-  .step{text-align:center;padding:44px 30px;border:1px solid rgba(143,189,178,.4)}
+  .step{padding:40px 32px;border:1px solid rgba(143,189,178,.3)}
   .step .num{font-size:15px;color:var(--gold);letter-spacing:.3em;font-family:var(--sans);display:block;margin-bottom:18px}
   .step h3{font-size:24px;font-weight:500;margin:0 0 2px}
   .step .en{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted-on-forest);margin:0 0 18px}
@@ -145,7 +154,7 @@
     background:linear-gradient(90deg, rgba(18,51,48,0) 72%, var(--forest) 100%),
                linear-gradient(180deg, rgba(18,51,48,.22), transparent 26%)}
   .profile-bio{padding:96px 28px 96px 72px;max-width:620px}
-  .case-photo{display:block;width:calc(100% + 76px);margin:-44px -38px 30px;height:220px;object-fit:cover}
+  .case-photo{display:block;width:calc(100% + 72px);margin:-40px -36px 30px;height:220px;object-fit:cover}
   .profile h2{margin:0 0 4px}
   .role{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 26px}
   .bio p{color:var(--muted-on-forest);margin:0 0 1.1em}
@@ -173,6 +182,8 @@
   @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 
   @media (max-width:860px){
+    .nav-links{display:none}
+    .cred-row{grid-template-columns:1fr;gap:14px;padding:20px 28px}
     .case,.profile-split,.contact-grid{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .logo-wall{grid-template-columns:repeat(2,1fr)}
@@ -207,6 +218,9 @@
       <span class="medallion-sm" aria-hidden="true"><img src="assets/logo-lockup-cream-alpha.png" alt=""></span>
       <span>The Unique Pea</span>
     </a>
+    <nav class="nav-links" aria-label="주요 섹션">
+      <a href="#story">스토리</a><a href="#case">사례</a><a href="#how">프로세스</a><a href="#consultant">디렉터</a>
+    </nav>
     <a class="nav-cta" href="#contact">상담 신청</a>
   </div>
 </header>
@@ -227,6 +241,15 @@
       <h1>자신만의 음식은 있지만,<br>비즈니스는 어려운 <em>F&amp;B 창업자</em>에게.</h1>
       <p class="lede">자기다움을 잃지 않고, 오래 선택받는 브랜드.<br>첫 진단부터 소프트랜딩까지 <span style="white-space:nowrap">The Unique Pea</span>가 함께 만듭니다.</p>
       <a class="btn" href="#contact">무료 진단 상담 신청</a>
+    </div>
+  </div>
+
+  <!-- 성과 지표 스트립 -->
+  <div class="cred">
+    <div class="wrap cred-row">
+      <div><b>11평 · 테이블 7개</b><span>C급 상권에서 일 평균 8회전</span></div>
+      <div><b>오픈 직후 웨이팅</b><span>안골순대 초기 세팅 ~ 소프트랜딩</span></div>
+      <div><b>순이익률 15% 모델</b><span>박쿤스트 운영 구조 재설계</span></div>
     </div>
   </div>
 
@@ -417,8 +440,8 @@
   <div class="orn" aria-hidden="true"><i></i></div>
   <div class="wrap">
     <span class="caps" style="color:var(--gold-soft)">The Unique Pea</span><br><br>
-    © 2026 The Unique Pea. F&amp;B Brand Consulting.<br>
-    자기다움을 잃지 않고, 오래 선택받는 브랜드.
+    silverbell9404@gmail.com · 010-9871-4404<br>
+    © 2026 The Unique Pea. F&amp;B Brand Consulting. All rights reserved.
   </div>
 </footer>
 
