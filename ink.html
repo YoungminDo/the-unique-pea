@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Unique Pea — 시안 C · 잉크 손그림</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root{
+    --forest:#1B4741;
+    --forest-deep:#123330;
+    --cream:#F3ECDA;
+    --cream-soft:#E7DEC8;
+    --gold:#8FBDB2;
+    --gold-soft:#A9CBC2;
+    --gold-deep:#1E5C55;
+    --cream-card:#FAF5E7;
+    --pea-bright:#8FBDB2;
+    --pea-on-cream:#1E5C55;
+    --ink-on-cream:#25352F;
+    --muted-on-cream:#57605A;
+    --muted-on-forest:#A7BDB6;
+    --serif:"Playfair Display","Noto Serif KR",Didot,"Bodoni MT",Georgia,"Nanum Myeongjo","Apple Myungjo",Batang,serif;
+    --sans:"Pretendard Variable",Pretendard,"Helvetica Neue",Arial,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--forest);color:var(--cream);
+    font-family:var(--serif);font-size:17.5px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;word-break:keep-all;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:0 28px}
+  a{color:inherit}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .caps{font-family:var(--sans);letter-spacing:.22em;text-transform:uppercase;font-size:12px}
+
+  /* ── header ── */
+  header{position:sticky;top:0;background:rgba(18,51,48,.94);backdrop-filter:blur(8px);border-bottom:1px solid rgba(143,189,178,.35);z-index:10}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .logo svg{display:block}
+  .logo span{font-size:17px;letter-spacing:.14em;text-transform:uppercase}
+  .nav-cta{font-family:var(--sans);font-size:13px;letter-spacing:.06em;text-decoration:none;border:1px solid var(--gold);color:var(--gold-soft);padding:10px 22px;transition:all .25s}
+  .nav-cta:hover{background:var(--gold);color:var(--forest-deep)}
+
+  /* ── hero ── */
+  .hero{padding:100px 0 90px;text-align:center;position:relative;overflow:hidden;
+    background:radial-gradient(ellipse 60% 50% at 50% 0%, rgba(143,189,178,.10), transparent)}
+  /* 배경 실사 영상: 미슐랭 주방 ↔ 한국 홀 크로스페이드 */
+  .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity 2.2s ease}
+  .hero-bg video.live{opacity:.34}
+  .hero-bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(18,51,48,.75), rgba(18,51,48,.65) 45%, var(--forest) 96%)}
+  .hero > .wrap{position:relative;z-index:1}
+  @media (prefers-reduced-motion:reduce){.hero-bg{display:none}}
+  .crest{margin:0 auto 40px;animation:fadeUp 1.1s .1s both}
+  /* 실제 생성 로고 — 원형 씰 크롭 메달리온 */
+  .medallion{position:relative;width:256px;height:256px;margin:0 auto 44px;border-radius:10px;overflow:hidden;
+    box-shadow:0 0 0 1px rgba(30,92,85,.25),0 18px 50px rgba(0,0,0,.4);
+    animation:fadeUp 1.1s .1s both}
+  .medallion img{display:block;width:100%;height:100%;object-fit:cover}
+  .medallion-sm{position:relative;width:40px;height:40px;border-radius:7px;overflow:hidden;flex:none;
+    box-shadow:0 0 0 1px rgba(169,203,194,.5)}
+  .medallion-sm img{display:block;width:100%;height:100%;object-fit:cover}
+  h1{font-size:clamp(36px,5vw,60px);line-height:1.3;font-weight:500;letter-spacing:.01em;margin:0 0 26px;text-wrap:balance;animation:fadeUp 1.1s .3s both}
+  h1 em{font-style:normal;color:var(--pea-bright)}
+  .hero .caps{color:var(--gold-soft);display:block;margin-bottom:30px;animation:fadeUp 1.1s .2s both}
+  .hero p.lede{color:var(--cream);opacity:.9;max-width:33em;margin:0 auto 44px;animation:fadeUp 1.1s .45s both}
+  .btn{display:inline-block;font-family:var(--sans);background:var(--gold);color:var(--forest-deep);text-decoration:none;padding:16px 42px;font-size:14px;letter-spacing:.06em;transition:background .25s;animation:fadeUp 1.1s .55s both;border:0;cursor:pointer}
+  .btn:hover{background:var(--gold-soft)}
+  .btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold-soft)}
+  .btn.ghost:hover{background:var(--gold);color:var(--forest-deep)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.crest,h1,.hero .caps,.hero p.lede,.btn{animation:none}}
+
+  /* ── ornament divider ── */
+  .orn{display:flex;align-items:center;gap:16px;justify-content:center;margin:0 auto;max-width:420px;color:var(--gold)}
+  .orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold));opacity:.55}
+  .orn::after{background:linear-gradient(90deg,var(--gold),transparent)}
+  .orn i{width:7px;height:7px;border-radius:50%;background:var(--pea-bright)}
+
+  /* ── sections ── */
+  section{padding:100px 0}
+  .on-cream{background:var(--cream);color:var(--ink-on-cream)}
+  .sec-head{text-align:center;margin-bottom:56px}
+  .sec-head .caps{color:var(--gold);display:block;margin-bottom:18px}
+  .on-cream .sec-head .caps{color:var(--gold-deep)}
+  h2{font-size:clamp(28px,3.4vw,42px);line-height:1.4;font-weight:500;margin:0;text-wrap:balance}
+  .lede{font-size:19px}
+
+  /* story */
+  .story .wrap{max-width:760px;text-align:center}
+  .story blockquote{margin:0 0 40px;font-size:clamp(22px,2.8vw,30px);line-height:1.7;font-weight:500;color:var(--cream)}
+  .story blockquote footer{font-style:normal;font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-on-forest);margin-top:22px}
+  .story p{color:var(--muted-on-forest);text-align:left;margin:0 0 1.2em}
+  .story p strong{color:var(--cream);font-weight:600}
+
+  /* why (cream) */
+  .why .wrap{max-width:760px;text-align:center}
+  .why p{color:var(--muted-on-cream);max-width:34em;margin:26px auto 0}
+
+  /* case (cream) */
+  .case{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+  .case-card{border:1px solid var(--gold-soft);outline:1px solid var(--gold-soft);outline-offset:5px;background:var(--cream-card);padding:44px 38px;margin:6px}
+  .case-card h3{font-size:26px;font-weight:500;margin:0 0 4px;text-align:center}
+  .case-card .where{font-family:var(--sans);font-size:12.5px;letter-spacing:.08em;color:var(--muted-on-cream);text-align:center;margin:0 0 30px}
+  .case-card h4{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);margin:28px 0 12px;text-align:center}
+  .case-card ul{margin:0;padding:0;list-style:none;text-align:center}
+  .case-card li{padding:6px 0;font-size:15px;color:var(--muted-on-cream);font-family:var(--sans)}
+  .stats{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;padding:22px 0;border-top:1px solid var(--cream-soft);border-bottom:1px solid var(--cream-soft)}
+  .stat{text-align:center}
+  .stat b{display:block;font-size:32px;font-weight:500;color:var(--gold-deep);font-variant-numeric:tabular-nums}
+  .stat span{font-family:var(--sans);font-size:12.5px;color:var(--muted-on-cream)}
+
+  /* how (forest) */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-bottom:64px}
+  .step{text-align:center;padding:44px 30px;border:1px solid rgba(143,189,178,.4)}
+  .step .num{font-size:15px;color:var(--gold);letter-spacing:.3em;font-family:var(--sans);display:block;margin-bottom:18px}
+  .step h3{font-size:24px;font-weight:500;margin:0 0 2px}
+  .step .en{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted-on-forest);margin:0 0 18px}
+  .step p{font-family:var(--sans);font-size:14.5px;line-height:1.8;color:var(--muted-on-forest);margin:0}
+  .fee{max-width:640px;margin:0 auto;text-align:center}
+  .fee p{color:var(--muted-on-forest);margin:26px 0 0}
+  .fee p strong{color:var(--cream)}
+
+  /* clients (cream) */
+  .logo-wall{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .client{border:1px solid var(--gold-soft);background:var(--cream-card);min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:22px;text-align:center}
+  .client b{font-size:21px;font-weight:500}
+  .client span{font-family:var(--sans);font-size:12px;color:var(--muted-on-cream);letter-spacing:.08em}
+  .client img{display:block;max-height:62px;max-width:82%;object-fit:contain;border:1px solid var(--cream-soft)}
+  .client.soon{border-style:dashed;background:transparent}
+  .client.soon b{color:var(--pea-on-cream);font-weight:400}
+
+  /* consultant (forest) — 왼쪽 풀블리드 포트레이트 */
+  .consultant-full{padding:0}
+  .profile-split{display:grid;grid-template-columns:1fr 1.15fr;min-height:680px}
+  .profile-photo{position:relative;min-height:440px}
+  .profile-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+  .profile-photo::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg, rgba(18,51,48,0) 72%, var(--forest) 100%),
+               linear-gradient(180deg, rgba(18,51,48,.22), transparent 26%)}
+  .profile-bio{padding:96px 28px 96px 72px;max-width:620px}
+  .case-photo{display:block;width:calc(100% + 76px);margin:-44px -38px 30px;height:220px;object-fit:cover}
+  .profile h2{margin:0 0 4px}
+  .role{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 26px}
+  .bio p{color:var(--muted-on-forest);margin:0 0 1.1em}
+  .bio p.quote{font-weight:500;font-size:20px;color:var(--cream);line-height:1.7}
+  .creds{margin:34px 0 0;padding:0;list-style:none;border-top:1px solid rgba(143,189,178,.4)}
+  .creds li{display:grid;grid-template-columns:210px 1fr;gap:18px;padding:14px 0;border-bottom:1px solid rgba(143,189,178,.25);font-size:15px;font-family:var(--sans)}
+  .creds li b{font-weight:600;color:var(--cream)}
+  .creds li span{color:var(--muted-on-forest)}
+
+  /* contact (cream) */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:10px}
+  .contact dl{margin:34px 0 0;font-size:15px}
+  .contact dt{font-family:var(--sans);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);margin-top:20px}
+  .contact dd{margin:4px 0 0;font-size:18px}
+  form{display:flex;flex-direction:column;gap:14px}
+  label{font-family:var(--sans);font-size:13px;letter-spacing:.05em;color:var(--muted-on-cream)}
+  input,textarea{font-family:var(--sans);font-size:15px;border:1px solid var(--gold-soft);background:var(--cream-card);padding:14px;color:var(--ink-on-cream)}
+  input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:0}
+
+  footer.site{padding:52px 0;text-align:center;color:var(--muted-on-forest);font-family:var(--sans);font-size:12.5px;letter-spacing:.06em}
+  footer.site .orn{margin-bottom:28px}
+
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .8s,transform .8s}
+  .rv.on{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+  @media (max-width:860px){
+    .case,.profile-split,.contact-grid{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .logo-wall{grid-template-columns:repeat(2,1fr)}
+    .profile-photo{min-height:88vw}
+    .profile-photo::after{background:linear-gradient(180deg, rgba(18,51,48,0) 74%, var(--forest) 100%)}
+    .profile-bio{padding:56px 28px}
+    section{padding:72px 0}
+    .consultant-full{padding:0}
+    /* 모바일 헤더: 로고·CTA 겹침 방지 */
+    .nav{gap:12px}
+    .logo{gap:9px}
+    .logo span{font-size:13px;letter-spacing:.1em}
+    .nav-cta{padding:8px 14px;font-size:12px;white-space:nowrap}
+    /* 히어로 호흡 */
+    .hero{padding:64px 0 56px}
+    .medallion{width:168px;height:168px;margin-bottom:32px}
+    .hero p.lede{margin-bottom:34px}
+    /* 이력 표: 라벨-내용 세로 스택 */
+    .creds li{grid-template-columns:1fr;gap:3px;padding:13px 0}
+    /* 케이스 카드 여백 축소 (case-photo 네거티브 마진과 동기화) */
+    .case-card{padding:34px 24px}
+    .case-photo{width:calc(100% + 48px);margin:-34px -24px 26px;height:180px}
+    .stats{gap:22px}
+    .sec-head{margin-bottom:40px}
+    .contact-grid{gap:40px}
+  }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="The Unique Pea">
+      <span class="medallion-sm" aria-hidden="true"><img src="assets/logo-ink.png" alt=""></span>
+      <span>The Unique Pea</span>
+    </a>
+    <a class="nav-cta" href="#contact">상담 신청</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. HERO -->
+  <div class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <video id="v1" class="live" data-src="assets/hero-kitchen.mp4" muted autoplay loop playsinline preload="none"></video>
+      <video id="v2" data-src="assets/hero-hall.mp4" muted autoplay loop playsinline preload="none"></video>
+    </div>
+    <div class="wrap">
+      <div class="medallion">
+        <img src="assets/logo-ink.png" alt="The Unique Pea 손그림 로고 — 크림 종이 위 청녹 잉크">
+      </div>
+      <span class="caps">F&amp;B Brand Consulting · Est. 2026</span>
+      <h1>스무 장의 요 아래,<br><em>완두콩 한 알.</em></h1>
+      <p class="lede">우리는 그것을 알아보는 사람입니다. 유행과 조언이 겹겹이 쌓인 아래에서
+      당신 브랜드만의 유니크함을 찾아, 오래 선택받는 구조로 만듭니다.</p>
+      <a class="btn" href="#contact">무료 진단 상담 신청</a>
+    </div>
+  </div>
+
+  <!-- 2. STORY -->
+  <section class="story" id="story">
+    <div class="wrap rv">
+      <div class="orn" aria-hidden="true"><i></i></div>
+      <div class="sec-head" style="margin-top:44px"><span class="caps" style="color:var(--gold-soft)">The Story</span></div>
+      <blockquote>
+        "공주는 스무 장의 요 아래 놓인<br>완두콩 한 알 때문에 잠들지 못했습니다."
+        <footer>— 안데르센, 『공주와 완두콩』</footer>
+      </blockquote>
+      <p>동화에서 진짜 공주를 알아본 것은 왕관이 아니라 <strong>예민함</strong>이었습니다.</p>
+      <p>The Unique Pea는 그 예민함으로 일합니다. 시장의 유행, 주변의 조언, 창업자의 불안이
+      겹겹이 쌓인 아래 — 당신 브랜드의 완두콩, <strong>남들이 흉내 낼 수 없는 자기다움</strong>을 찾아냅니다.
+      그리고 그것을 하루 반짝이 아닌, 오래 선택받는 비즈니스 구조로 만듭니다.</p>
+    </div>
+  </section>
+
+  <!-- 3. WHY -->
+  <section class="on-cream why" id="why">
+    <div class="wrap rv">
+      <div class="sec-head">
+        <span class="caps">Why We Exist</span>
+        <h2>자기다움을 잃지 않고,<br>오래 선택받는 브랜드.</h2>
+      </div>
+      <p class="lede" style="text-align:center;color:var(--muted-on-cream)">자신만의 음식과 방향성은 분명한데, 그것을 지속 가능한 비즈니스로
+      만드는 일은 전혀 다른 문제입니다. 우리는 그 간극을 메우기 위해 존재합니다 —<br>
+      <strong style="color:var(--ink-on-cream)">당신의 맛을 바꾸지 않으면서, 당신의 구조를 바꿉니다.</strong></p>
+    </div>
+  </section>
+
+  <!-- 4. CASE -->
+  <section class="on-cream" id="case" style="padding-top:0">
+    <div class="wrap rv">
+      <div class="sec-head">
+        <span class="caps">Proven from A to Z</span>
+        <h2>말이 아니라, 매장으로 증명합니다.</h2>
+      </div>
+      <div class="case">
+        <article class="case-card">
+          <img class="case-photo" src="assets/case-angol.jpg" alt="안골순대 순대·수육 상차림">
+          <h3>안골순대</h3>
+          <p class="where">순대국밥 · 영등포구청역<br>초기 세팅부터 소프트랜딩까지 A to Z 동행</p>
+          <div class="stats">
+            <div class="stat"><b>11평</b><span>테이블 7개 · C급 상권</span></div>
+            <div class="stat"><b>8회전</b><span>일 평균 회전</span></div>
+            <div class="stat"><b>웨이팅</b><span>오픈 직후</span></div>
+          </div>
+          <h4>Scope</h4>
+          <ul>
+            <li>타겟 분석 및 브랜드 포지셔닝 설계</li>
+            <li>메뉴 구조 및 원가율 재설계</li>
+            <li>서비스 매뉴얼 구축</li>
+            <li>장기 운영 전략 및 수익 구조 설계</li>
+            <li>확장 가능성을 고려한 운영 모델 구축</li>
+          </ul>
+          <h4>Now</h4>
+          <ul><li>로컬 맛집으로 자리잡은 후 확장 준비중</li></ul>
+        </article>
+        <article class="case-card">
+          <img class="case-photo" src="assets/case-backkunst.jpg" alt="박쿤스트 베이커리 쇼윈도">
+          <h3>박쿤스트</h3>
+          <p class="where">Backkunst · 베이커리<br>브랜드 서사와 수익 구조 재설계</p>
+          <div class="stats">
+            <div class="stat"><b>15%</b><span>순이익률 모델</span></div>
+            <div class="stat"><b>반자동</b><span>운영 모델</span></div>
+          </div>
+          <h4>Scope</h4>
+          <ul>
+            <li>타겟 재정의</li>
+            <li>브랜드 서사 구조 설계</li>
+            <li>제품 포지셔닝 조정</li>
+          </ul>
+          <h4>Result</h4>
+          <ul><li>오픈 직후 안정적 매출 구조 확보</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. HOW -->
+  <section id="how">
+    <div class="wrap rv">
+      <div class="sec-head">
+        <span class="caps" style="color:var(--gold-soft)">How We Work</span>
+        <h2>시작은 가볍게, 성장은 함께.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">I</span>
+          <h3>감지</h3><p class="en">The Sensing</p>
+          <p>브랜드 진단과 인터뷰로 당신만의 완두콩 — 흉내 낼 수 없는 유니크함 — 을 찾아냅니다.</p>
+        </div>
+        <div class="step">
+          <span class="num">II</span>
+          <h3>설계</h3><p class="en">The Structure</p>
+          <p>메뉴 구조와 원가율, 서비스 매뉴얼, 수익 구조까지 — 자기다움이 돈이 되는 운영 모델을 설계합니다.</p>
+        </div>
+        <div class="step">
+          <span class="num">III</span>
+          <h3>동행</h3><p class="en">The Landing</p>
+          <p>초기 세팅부터 소프트랜딩까지 현장에서 함께합니다. 자리잡을 때까지의 동행입니다.</p>
+        </div>
+      </div>
+      <div class="fee">
+        <div class="orn" aria-hidden="true"><i></i></div>
+        <p><strong>우리는 당신이 잘돼야 잘됩니다.</strong><br>
+        초기 컨설팅 비용은 낮추고, 보수의 중심은 매출 연동으로 가져갑니다.<br>
+        같은 배에 타는 것 — 그것이 우리가 결과를 책임지는 방식입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CLIENTS -->
+  <section class="on-cream" id="clients">
+    <div class="wrap rv">
+      <div class="sec-head">
+        <span class="caps">Clients</span>
+        <h2>함께 완두콩을 찾은 브랜드들</h2>
+      </div>
+      <div class="logo-wall">
+        <div class="client"><img src="assets/logo-angol-sign.png" alt="안골순대 간판 로고"><span>안골순대 · Sundae Gukbap</span></div>
+        <div class="client"><img src="assets/logo-backkunst-script.png" alt="Backkunst 로고타입" style="max-height:48px"><span>박쿤스트 · Bakery</span></div>
+        <div class="client soon"><b>·</b><span>다음 이야기</span></div>
+        <div class="client soon"><b>·</b><span>당신의 브랜드</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CONSULTANT -->
+  <section id="consultant" class="consultant-full">
+    <div class="profile-split rv">
+      <div class="profile-photo">
+        <img src="assets/profile-jongeun.jpg" alt="이종은 F&amp;B Brand Director 프로필 사진">
+      </div>
+      <div class="profile-bio">
+        <span class="caps" style="color:var(--gold-soft);display:block;margin-bottom:26px">The Consultant</span>
+        <div class="bio">
+          <h2>이종은</h2>
+          <p class="role">F&amp;B Brand Director</p>
+          <p class="quote">"현장을 아는 F&amp;B 브랜드 구조 설계자.<br>전략이 실제로 작동하는 구조를 만듭니다."</p>
+          <p>뉴욕과 샌프란시스코의 미슐랭 키친에서 파인다이닝의 정밀함을,
+          한국의 매장과 유통 현장에서 지속 가능한 운영을 배웠습니다.
+          Fine dining부터 리테일까지 — 폭넓은 업태 경험이 예민한 감지의 근거입니다.</p>
+          <ul class="creds">
+            <li><b>The Culinary Institute of America</b><span>AOS in Culinary Arts · Bachelor in Applied Food Studies</span></li>
+            <li><b>Bouley Restaurant</b><span>Chef — New York · Michelin 1★</span></li>
+            <li><b>Gary Danko</b><span>Lead Pastry Chef — San Francisco · Michelin 1★</span></li>
+            <li><b>META</b><span>Senior Pastry Chef — San Francisco</span></li>
+            <li><b>Calipub</b><span>General Manager — 연매출 150% 성장</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CONTACT -->
+  <section class="on-cream" id="contact">
+    <div class="wrap rv">
+      <div class="sec-head">
+        <span class="caps">Contact</span>
+        <h2>당신의 완두콩, 같이 찾아봅시다.</h2>
+      </div>
+      <div class="contact-grid contact">
+        <div>
+          <p style="color:var(--muted-on-cream);margin:0">첫 상담은 부담 없이. 지금의 고민을 들려주시면 진단 방향을 제안드립니다.</p>
+          <dl>
+            <dt>Phone</dt><dd>010-9871-4404</dd>
+            <dt>Mail</dt><dd>silverbell9404@gmail.com</dd>
+          </dl>
+        </div>
+        <form aria-label="상담 신청 (목업)">
+          <label for="nm">이름 / 브랜드명</label>
+          <input id="nm" type="text" placeholder="예) 안골순대 김대표">
+          <label for="ph2">연락처</label>
+          <input id="ph2" type="tel" placeholder="010-0000-0000">
+          <label for="msg">지금의 고민</label>
+          <textarea id="msg" rows="4" placeholder="어떤 매장을 준비 중이신가요? 어디서 막히셨나요?"></textarea>
+          <button class="btn" type="button" style="animation:none">상담 신청하기</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="orn" aria-hidden="true"><i></i></div>
+  <div class="wrap">
+    <span class="caps" style="color:var(--gold-soft)">The Unique Pea</span><br><br>
+    © 2026 The Unique Pea. F&amp;B Brand Consulting.<br>
+    자기다움을 잃지 않고, 오래 선택받는 브랜드.
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+  }), { threshold: .1 });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드 (뮤트 자동재생, 모바일 포함)
+  const v1 = document.getElementById('v1'), v2 = document.getElementById('v2');
+  if (v1 && v2 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const tryPlay = () => [v1, v2].forEach(v => v.paused && v.play().catch(() => {}));
+    [v1, v2].forEach(v => {
+      v.muted = true;               // 일부 브라우저는 JS로도 muted를 요구
+      v.src = v.dataset.src;
+      v.addEventListener('canplay', tryPlay);
+    });
+    tryPlay();
+    ['click', 'scroll', 'touchstart', 'keydown'].forEach(ev =>
+      addEventListener(ev, tryPlay, { once: true, passive: true }));
+    let flip = false;
+    setInterval(() => {
+      flip = !flip;
+      v1.classList.toggle('live', !flip);
+      v2.classList.toggle('live', flip);
+    }, 7000);
+  }
+</script>
