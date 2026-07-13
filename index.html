@@ -430,28 +430,23 @@
   }), { threshold: .1 });
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-  // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드 — 모바일(768px 미만)은 데이터 절약을 위해 미로드
+  // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드 (뮤트 자동재생, 모바일 포함)
   const v1 = document.getElementById('v1'), v2 = document.getElementById('v2');
-  if (v1 && v2) {
-    const mqDesktop = matchMedia('(min-width: 768px)');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const tryPlay = () => [v1, v2].forEach(v => v.src && v.paused && v.play().catch(() => {}));
-    let started = false;
-    const loadVideos = () => {
-      if (started || reduced.matches) return;
-      started = true;
-      [v1, v2].forEach(v => { v.src = v.dataset.src; v.addEventListener('canplay', tryPlay); });
-      tryPlay();
-      let flip = false;
-      setInterval(() => {
-        flip = !flip;
-        v1.classList.toggle('live', !flip);
-        v2.classList.toggle('live', flip);
-      }, 7000);
-    };
-    if (mqDesktop.matches) loadVideos();
-    mqDesktop.addEventListener('change', e => { if (e.matches) loadVideos(); });
+  if (v1 && v2 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const tryPlay = () => [v1, v2].forEach(v => v.paused && v.play().catch(() => {}));
+    [v1, v2].forEach(v => {
+      v.muted = true;               // 일부 브라우저는 JS로도 muted를 요구
+      v.src = v.dataset.src;
+      v.addEventListener('canplay', tryPlay);
+    });
+    tryPlay();
     ['click', 'scroll', 'touchstart', 'keydown'].forEach(ev =>
       addEventListener(ev, tryPlay, { once: true, passive: true }));
+    let flip = false;
+    setInterval(() => {
+      flip = !flip;
+      v1.classList.toggle('live', !flip);
+      v2.classList.toggle('live', flip);
+    }, 7000);
   }
 </script>
