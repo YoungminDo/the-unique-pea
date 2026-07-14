@@ -112,7 +112,13 @@
   .lede{font-size:19px}
 
   /* story */
-  .story .wrap{max-width:760px;text-align:center}
+  .story{position:relative;overflow:hidden}
+  .story-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .story-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+  .story-bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, var(--forest) 0%, rgba(30,72,68,.78) 26%, rgba(30,72,68,.78) 74%, var(--forest) 100%)}
+  .story .wrap{position:relative;z-index:1;max-width:760px;text-align:center}
+  @media (prefers-reduced-motion:reduce){.story-bg{display:none}}
   .story blockquote{margin:0 0 40px;font-size:clamp(22px,2.8vw,30px);line-height:1.7;font-weight:500;color:var(--cream)}
   .story blockquote footer{font-style:normal;font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-on-forest);margin-top:22px}
   .story p{color:var(--muted-on-forest);text-align:left;margin:0 0 1.2em}
@@ -268,6 +274,9 @@
 
   <!-- 2. STORY -->
   <section class="story" id="story">
+    <div class="story-bg" aria-hidden="true">
+      <video id="sv" src="assets/story-princess.mp4" muted autoplay loop playsinline preload="metadata"></video>
+    </div>
     <div class="wrap rv">
       <div class="orn" aria-hidden="true"><i></i></div>
       <div class="sec-head" style="margin-top:44px"><span class="caps" style="color:var(--gold-soft)">The Story</span><h2 style="margin-top:14px">스무 장의 담요 아래,<br>완두콩 한 알.</h2></div>
@@ -463,6 +472,15 @@
     if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
   }), { threshold: .1 });
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  // 스토리 섹션 배경 영상 (뮤트 자동재생)
+  const sv = document.getElementById('sv');
+  if (sv && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const p = () => sv.paused && sv.play().catch(() => {});
+    sv.addEventListener('canplay', p); p();
+    ['click', 'scroll', 'touchstart', 'keydown'].forEach(ev =>
+      addEventListener(ev, p, { once: true, passive: true }));
+  }
 
   // 주방(미국) ↔ 홀(한국) 배경 영상 크로스페이드 (뮤트 자동재생, 모바일 포함)
   const v1 = document.getElementById('v1'), v2 = document.getElementById('v2');
